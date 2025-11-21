@@ -11,12 +11,16 @@ interface ReceiptPreviewProps {
 }
 
 export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack }) => {
+  // Format number without currency symbol (for items table only)
+  const formatNumber = (amount: number): string => {
+    return amount.toFixed(2);
+  };
+
   const generatePNG = async () => {
     const element = document.getElementById('receipt-content');
     if (!element) return;
 
     try {
-      // Temporarily adjust styles for PNG generation
       const originalMaxWidth = element.style.maxWidth;
       const originalWidth = element.style.width;
       const originalPadding = element.style.padding;
@@ -32,7 +36,6 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
         backgroundColor: '#ffffff',
       });
       
-      // Convert canvas to blob and download
       canvas.toBlob((blob) => {
         if (blob) {
           const url = URL.createObjectURL(blob);
@@ -46,7 +49,6 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
         }
       }, 'image/png');
 
-      // Restore original styles
       element.style.maxWidth = originalMaxWidth;
       element.style.width = originalWidth;
       element.style.padding = originalPadding;
@@ -61,11 +63,9 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
     if (!element) return;
 
     try {
-      // Determine orientation based on screen width
       const isMobile = window.innerWidth <= 768;
-      const orientation = isMobile ? 'l' : 'p'; // landscape for mobile, portrait for desktop
+      const orientation = isMobile ? 'l' : 'p';
       
-      // Temporarily adjust styles for PDF generation
       const originalMaxWidth = element.style.maxWidth;
       const originalWidth = element.style.width;
       const originalPadding = element.style.padding;
@@ -86,18 +86,15 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      // Calculate dimensions to fit on single page with minimal margins
-      let imgWidth = pdfWidth - 10; // 5mm margin on each side
+      let imgWidth = pdfWidth - 10;
       let imgHeight = (canvas.height * imgWidth) / canvas.width;
       
-      // If height exceeds page height, scale down to fit
       if (imgHeight > pdfHeight - 10) {
         const scaleFactor = (pdfHeight - 10) / imgHeight;
         imgHeight = pdfHeight - 10;
         imgWidth = imgWidth * scaleFactor;
       }
       
-      // Center the image horizontally
       const xOffset = (pdfWidth - imgWidth) / 2;
       
       pdf.addImage(imgData, 'PNG', xOffset, 5, imgWidth, imgHeight);
@@ -107,7 +104,6 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
       console.error('Error generating PDF:', error);
       alert('Error generating PDF. Please try again.');
     } finally {
-      // Restore original styles
       if (element) {
         element.style.maxWidth = originalMaxWidth;
         element.style.width = originalWidth;
@@ -166,7 +162,6 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
       year: 'numeric',
     });
   };
-
 
   return (
     <div className="w-full px-2 py-4">
@@ -249,8 +244,8 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
                 <tr key={index} className="border-b">
                   <td className="border border-gray-200 px-2 py-2 break-words overflow-hidden font-medium">{item.productName}</td>
                   <td className="border border-gray-200 px-2 py-2 text-center font-medium">{item.quantity}</td>
-                  <td className="border border-gray-200 px-2 py-2 text-right font-medium whitespace-nowrap">{formatLKR(item.unitPrice)}</td>
-                  <td className="border border-gray-200 px-2 py-2 text-right font-semibold whitespace-nowrap">{formatLKR(item.total)}</td>
+                  <td className="border border-gray-200 px-2 py-2 text-right font-medium whitespace-nowrap">{formatNumber(item.unitPrice)}</td>
+                  <td className="border border-gray-200 px-2 py-2 text-right font-semibold whitespace-nowrap">{formatNumber(item.total)}</td>
                 </tr>
               ))}
             </tbody>
