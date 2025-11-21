@@ -256,33 +256,33 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
         <div className="flex justify-end mb-6">
           <div className="w-full sm:w-3/4 md:w-1/2">
             <div className="bg-gray-50 p-3 rounded-lg">
-              <div className="flex justify-between items-center text-sm mb-1 text-gray-900">
+              <div className="flex justify-between items-center text-sm mb-1.5 text-gray-900">
                 <span>Subtotal:</span>
                 <span className="whitespace-nowrap">{formatLKR(invoice.subtotal)}</span>
               </div>
               
               {invoice.shippingFee > 0 && (
-                <div className="flex justify-between items-center text-sm mb-1 text-blue-700 font-medium">
+                <div className="flex justify-between items-center text-sm mb-1.5 text-blue-700 font-medium">
                   <span>Courier charge:</span>
                   <span className="whitespace-nowrap">+{formatLKR(invoice.shippingFee)}</span>
                 </div>
               )}
               
               {invoice.discount > 0 && (
-                <div className="flex justify-between items-center text-sm mb-1 text-red-700 font-medium">
+                <div className="flex justify-between items-center text-sm mb-1.5 text-red-700 font-medium">
                   <span>Discount:</span>
                   <span className="whitespace-nowrap">-{formatLKR(invoice.discount)}</span>
                 </div>
               )}
               
               {invoice.pendingAmount > 0 && (
-                <div className="flex justify-between items-center text-sm mb-1 text-orange-700 font-medium">
+                <div className="flex justify-between items-center text-sm mb-1.5 text-orange-700 font-medium">
                   <span>Pending Amount:</span>
                   <span className="whitespace-nowrap">+{formatLKR(invoice.pendingAmount)}</span>
                 </div>
               )}
               
-              <div className="flex justify-between items-center text-lg font-bold border-t-2 border-gray-900 pt-2 text-gray-900">
+              <div className="flex justify-between items-center text-lg font-bold border-t-2 border-gray-900 pt-2.5 mt-0.5 text-gray-900">
                 <span>Total:</span>
                 <span className="whitespace-nowrap">{formatLKR(invoice.total)}</span>
               </div>
