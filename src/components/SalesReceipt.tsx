@@ -212,7 +212,7 @@ export const SalesReceipt: React.FC = () => {
     }
     
     if (shippingFee < 0) {
-      newErrors.shippingFee = 'Courier charge cannot be negative';
+      newErrors.shippingFee = 'Delivery charge cannot be negative';
     }
     
     const pendingAmt = typeof pendingAmount === 'string' ? 0 : pendingAmount;
@@ -879,10 +879,10 @@ export const SalesReceipt: React.FC = () => {
                 <span className="font-semibold">{formatLKR(subtotal)}</span>
               </div>
               
-              {/* Courier charge input */}
+              {/* Delivery charge input */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Courier Charge
+                  Delivery Charge
                 </label>
                 <input
                   type="number"
@@ -893,7 +893,7 @@ export const SalesReceipt: React.FC = () => {
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm ${
                     errors.shippingFee ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder="Enter courier charge"
+                  placeholder="Enter delivery charge"
                 />
                 {errors.shippingFee && <p className="text-red-500 text-xs mt-1">{errors.shippingFee}</p>}
               </div>
@@ -959,7 +959,7 @@ export const SalesReceipt: React.FC = () => {
               {/* Show applied amounts */}
               {shippingFee > 0 && (
                 <div className="flex justify-between items-center text-sm text-blue-600">
-                  <span>Courier:</span>
+                  <span>Delivery:</span>
                   <span className="font-medium">+{formatLKR(shippingFee)}</span>
                 </div>
               )}

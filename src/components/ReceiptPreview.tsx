@@ -263,7 +263,7 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
               
               {invoice.shippingFee > 0 && (
                 <div className="flex justify-between items-center text-sm mb-1.5 text-blue-700 font-medium">
-                  <span>Courier charge:</span>
+                  <span>Delivery charge:</span>
                   <span className="whitespace-nowrap">+{formatLKR(invoice.shippingFee)}</span>
                 </div>
               )}
