@@ -1,0 +1,107 @@
+# Advance Payment Feature
+
+Add an optional **Advance Payment** field that lets customers pay an amount upfront. The advance payment is **deducted from the total**, and the receipt displays the advance paid and the remaining **Balance Due**.
+
+**Current total formula:**
+```
+total = subtotal - discount + shippingFee + pendingAmount
+```
+
+**New total formula (no change to `total`):**
+```
+total = subtotal - discount + shippingFee + pendingAmount   // stays the same
+balanceDue = total - advancePayment                         // NEW derived value
+```
+
+> [!IMPORTANT]
+> The `total` field in the database stays unchanged — it represents the invoice total before advance deduction. The **balance due** is calculated at display time as `total - advancePayment`.
+
+---
+
+## Proposed Changes
+
+### Data Layer
+
+#### [MODIFY] [index.ts](file:///d:/Bill-Kulshan/bill-receipt-generator-main/src/types/index.ts)
+
+Add `advancePayment` field to the [Invoice](file:///d:/Bill-Kulshan/bill-receipt-generator-main/src/types/index.ts#13-26) interface:
+
+```diff
+ export interface Invoice {
+   ...
+   pendingAmount: number;
++  advancePayment: number;
+   date: string;
+   user_id?: string;
+ }
+```
+
+---
+
+#### [NEW] Supabase Migration SQL
+
+A new migration to add the `advance_payment` column:
+
+```sql
+ALTER TABLE invoices ADD COLUMN IF NOT EXISTS advance_payment decimal(10,2) NOT NULL DEFAULT 0;
+```
+
+> [!NOTE]
+> You will need to run this SQL in your Supabase SQL Editor manually, same as the previous migrations.
+
+---
+
+### Storage Layer
+
+#### [MODIFY] [storage.ts](file:///d:/Bill-Kulshan/bill-receipt-generator-main/src/utils/storage.ts)
+
+- **[saveInvoice](file:///d:/Bill-Kulshan/bill-receipt-generator-main/src/utils/storage.ts#23-53)** — include `advance_payment` in insert payload
+- **[updateInvoice](file:///d:/Bill-Kulshan/bill-receipt-generator-main/src/utils/storage.ts#125-165)** — include `advance_payment` in update payload
+- **[getInvoiceByNumber](file:///d:/Bill-Kulshan/bill-receipt-generator-main/src/utils/storage.ts#90-124)** — map `advance_payment` → `advancePayment` in the returned object
+
+---
+
+### UI Components
+
+#### [MODIFY] [SalesReceipt.tsx](file:///d:/Bill-Kulshan/bill-receipt-generator-main/src/components/SalesReceipt.tsx)
+
+1. Add new state: `advancePaymentAmount` (same pattern as `discountAmount`)
+2. Add input field labeled **"Advance Payment"** in the totals section (after Pending Amount, before the final total box)
+3. Update [generateReceipt](file:///d:/Bill-Kulshan/bill-receipt-generator-main/src/components/SalesReceipt.tsx#226-303) to include `advancePayment` in the invoice object
+4. Display **Balance Due** below the total if an advance payment is entered
+5. Reset `advancePaymentAmount` in [handleNewReceipt](file:///d:/Bill-Kulshan/bill-receipt-generator-main/src/components/SalesReceipt.tsx#304-318)
+6. Populate `advancePaymentAmount` when loading/editing an invoice
+
+---
+
+#### [MODIFY] [ReceiptPreview.tsx](file:///d:/Bill-Kulshan/bill-receipt-generator-main/src/components/ReceiptPreview.tsx)
+
+In the **Totals** section of the receipt, add (after the Total row):
+
+```
+Advance Payment:    -LKR X,XXX.XX    (shown in green, only if > 0)
+─────────────────────────────────────
+Balance Due:         LKR X,XXX.XX    (bold, highlighted)
+```
+
+This will appear in the PDF, PNG, and print output automatically since they all render the same `#receipt-content` element.
+
+---
+
+## Verification Plan
+
+### Manual Verification
+
+Since there are no automated tests in this project, the changes will be verified manually in the browser:
+
+1. **Run the dev server** → `npm run dev` in the project root
+2. **Create an invoice WITHOUT advance payment**:
+   - Enter customer name, add items, optionally set discount/courier/pending
+   - Generate receipt → confirm the receipt looks the same as before (no advance line shown)
+3. **Create an invoice WITH advance payment**:
+   - Enter customer name, add items, enter an advance payment amount (e.g., 500)
+   - Confirm the total display shows: Total, then Advance Payment subtracted, then Balance Due
+   - Generate receipt → confirm the receipt shows "Advance Payment: -LKR 500.00" and "Balance Due: LKR X,XXX.XX"
+4. **Export** the receipt as PDF, PNG, and Print — confirm advance payment details are included
+5. **Edit an existing invoice** — confirm advance payment loads correctly when searching by invoice number
+6. **Run the Supabase migration** — add the `advance_payment` column via SQL Editor

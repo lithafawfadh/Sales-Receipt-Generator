@@ -286,6 +286,19 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
                 <span>Total:</span>
                 <span className="whitespace-nowrap">{formatLKR(invoice.total)}</span>
               </div>
+              
+              {invoice.advancePayment > 0 && (
+                <>
+                  <div className="flex justify-between items-center text-sm mb-1.5 text-green-700 font-medium">
+                    <span>Advance Payment:</span>
+                    <span className="whitespace-nowrap">-{formatLKR(invoice.advancePayment)}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-lg font-bold border-t-2 border-gray-900 pt-2.5 mt-0.5 text-blue-900">
+                    <span>Balance Due:</span>
+                    <span className="whitespace-nowrap">{formatLKR(invoice.total - invoice.advancePayment)}</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

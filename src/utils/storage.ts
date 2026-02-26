@@ -36,6 +36,7 @@ export const saveInvoice = async (invoice: Invoice): Promise<void> => {
         shipping_fee: invoice.shippingFee,
         total: invoice.total,
         pending_amount: invoice.pendingAmount,
+        advance_payment: invoice.advancePayment,
         date: invoice.date,
       }]);
 
@@ -113,6 +114,7 @@ export const getInvoiceByNumber = async (invoiceNumber: string): Promise<Invoice
       shippingFee: parseFloat(data.shipping_fee),
       total: parseFloat(data.total),
       pendingAmount: parseFloat(data.pending_amount || '0'),
+      advancePayment: parseFloat(data.advance_payment || '0'),
       date: data.date,
       user_id: data.user_id,
     };
@@ -135,6 +137,7 @@ export const updateInvoice = async (updatedInvoice: Invoice): Promise<void> => {
       shipping_fee: updatedInvoice.shippingFee,
       total: updatedInvoice.total,
       pending_amount: updatedInvoice.pendingAmount,
+      advance_payment: updatedInvoice.advancePayment,
       date: updatedInvoice.date,
       updated_at: new Date().toISOString(),
     };

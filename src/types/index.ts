@@ -20,6 +20,7 @@ export interface Invoice {
   shippingFee: number;
   total: number;
   pendingAmount: number;
+  advancePayment: number;
   date: string;
   user_id?: string;
 }

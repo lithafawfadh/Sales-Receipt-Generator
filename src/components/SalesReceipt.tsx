@@ -38,6 +38,7 @@ export const SalesReceipt: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
   const [pendingAmount, setPendingAmount] = useState<number | ''>('');
+  const [advancePaymentAmount, setAdvancePaymentAmount] = useState<number | ''>('');
   const [showHistory, setShowHistory] = useState(false);
 
   const addNewItem = () => {
@@ -219,6 +220,11 @@ export const SalesReceipt: React.FC = () => {
       newErrors.pendingAmount = 'Pending amount cannot be negative';
     }
 
+    const advanceAmt = typeof advancePaymentAmount === 'string' ? 0 : advancePaymentAmount;
+    if (advanceAmt < 0) {
+      newErrors.advancePayment = 'Advance payment cannot be negative';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -233,6 +239,7 @@ export const SalesReceipt: React.FC = () => {
     const discount = typeof discountAmount === 'string' ? 0 : discountAmount;
     const shippingFee = typeof shippingFeeAmount === 'string' ? 0 : shippingFeeAmount;
     const pendingAmt = typeof pendingAmount === 'string' ? 0 : pendingAmount;
+    const advanceAmt = typeof advancePaymentAmount === 'string' ? 0 : advancePaymentAmount;
     const totalAmount = subtotal - discount + shippingFee + pendingAmt;
     
     const processInvoice = async () => {
@@ -251,6 +258,7 @@ export const SalesReceipt: React.FC = () => {
               shippingFee,
               total: totalAmount,
               pendingAmount: pendingAmt,
+              advancePayment: advanceAmt,
               date: new Date().toISOString(),
             };
             await updateInvoice(invoice);
@@ -268,6 +276,7 @@ export const SalesReceipt: React.FC = () => {
             shippingFee,
             total: totalAmount,
             pendingAmount: pendingAmt,
+            advancePayment: advanceAmt,
             date: new Date().toISOString(),
           };
           await saveInvoice(invoice);
@@ -308,6 +317,7 @@ export const SalesReceipt: React.FC = () => {
     setDiscountAmount('');
     setShippingFeeAmount('');
     setPendingAmount('');
+    setAdvancePaymentAmount('');
     setErrors({});
     setCurrentInvoice(null);
     setShowReceipt(false);
@@ -334,6 +344,7 @@ export const SalesReceipt: React.FC = () => {
         setDiscountAmount(foundInvoice.discount || '');
         setShippingFeeAmount(foundInvoice.shippingFee || '');
         setPendingAmount(foundInvoice.pendingAmount || '');
+        setAdvancePaymentAmount(foundInvoice.advancePayment || '');
         setEditingInvoiceId(foundInvoice.id);
         setSearchError('');
         setErrors({});
@@ -395,6 +406,7 @@ export const SalesReceipt: React.FC = () => {
     setDiscountAmount(invoice.discount || '');
     setShippingFeeAmount(invoice.shippingFee || '');
     setPendingAmount(invoice.pendingAmount || '');
+    setAdvancePaymentAmount(invoice.advancePayment || '');
     setEditingInvoiceId(invoice.id);
     setSearchInvoiceNumber(invoice.invoiceNumber);
     setSearchError('');
@@ -406,7 +418,9 @@ export const SalesReceipt: React.FC = () => {
   const discount = typeof discountAmount === 'string' ? 0 : discountAmount;
   const shippingFee = typeof shippingFeeAmount === 'string' ? 0 : shippingFeeAmount;
   const pendingAmt = typeof pendingAmount === 'string' ? 0 : pendingAmount;
+  const advanceAmt = typeof advancePaymentAmount === 'string' ? 0 : advancePaymentAmount;
   const finalTotal = subtotal - discount + shippingFee + pendingAmt;
+  const balanceDue = finalTotal - advanceAmt;
 
   if (showReceipt && currentInvoice) {
     return (
@@ -923,6 +937,25 @@ export const SalesReceipt: React.FC = () => {
                 {errors.pendingAmount && <p className="text-red-500 text-xs mt-1">{errors.pendingAmount}</p>}
               </div>
               
+              {/* Advance payment input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Advance Payment
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={advancePaymentAmount}
+                  onChange={(e) => setAdvancePaymentAmount(e.target.value === '' ? '' : parseFloat(e.target.value) || '')}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm ${
+                    errors.advancePayment ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="Enter advance payment amount"
+                />
+                {errors.advancePayment && <p className="text-red-500 text-xs mt-1">{errors.advancePayment}</p>}
+              </div>
+              
               {/* Show applied amounts */}
               {shippingFee > 0 && (
                 <div className="flex justify-between items-center text-sm text-blue-600">
@@ -950,6 +983,20 @@ export const SalesReceipt: React.FC = () => {
                 <span>Total:</span>
                 <span className="text-emerald-700">{formatLKR(finalTotal)}</span>
               </div>
+              
+              {/* Advance Payment & Balance Due */}
+              {advanceAmt > 0 && (
+                <>
+                  <div className="flex justify-between items-center text-sm text-green-600">
+                    <span>Advance Payment:</span>
+                    <span className="font-medium">-{formatLKR(advanceAmt)}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-lg font-bold bg-blue-50 p-3 rounded-lg border-2 border-blue-200">
+                    <span>Balance Due:</span>
+                    <span className="text-blue-700">{formatLKR(balanceDue)}</span>
+                  </div>
+                </>
+              )}
             </div>
 
             {errors.items && <p className="text-red-500 text-sm mb-3">{errors.items}</p>}
