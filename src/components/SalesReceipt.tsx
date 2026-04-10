@@ -188,6 +188,18 @@ export const SalesReceipt: React.FC = () => {
     );
   };
 
+  const updateSaleItemPrice = (productId: string, unitPrice: number) => {
+    if (unitPrice < 0) return;
+
+    setSaleItems(items =>
+      items.map(item =>
+        item.productId === productId
+          ? { ...item, unitPrice, total: item.quantity * unitPrice }
+          : item
+      )
+    );
+  };
+
   const removeSaleItem = (productId: string) => {
     setSaleItems(items => items.filter(item => item.productId !== productId));
   };
@@ -791,11 +803,21 @@ export const SalesReceipt: React.FC = () => {
                 <div className="grid grid-cols-2 gap-2 text-sm mb-2">
                   <div>
                     <span className="text-gray-600">Price:</span>
-                    <p className="font-medium">{formatLKR(item.unitPrice)}</p>
+                    <div className="flex items-center space-x-1">
+                      <span className="text-xs text-gray-500">LKR</span>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={item.unitPrice}
+                        onChange={(e) => updateSaleItemPrice(item.productId, parseFloat(e.target.value) || 0)}
+                        className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-emerald-500 font-medium"
+                      />
+                    </div>
                   </div>
                   <div>
                     <span className="text-gray-600">Total:</span>
-                    <p className="font-semibold text-emerald-700">{formatLKR(item.total)}</p>
+                    <p className="font-semibold text-emerald-700 h-8 flex items-center">{formatLKR(item.total)}</p>
                   </div>
                 </div>
                 
@@ -854,7 +876,19 @@ export const SalesReceipt: React.FC = () => {
                         </button>
                       </div>
                     </td>
-                    <td className="py-3 px-2 text-right">{formatLKR(item.unitPrice)}</td>
+                    <td className="py-3 px-2 text-right">
+                      <div className="flex items-center justify-end space-x-1">
+                        <span className="text-xs text-gray-500 font-medium">LKR</span>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={item.unitPrice}
+                          onChange={(e) => updateSaleItemPrice(item.productId, parseFloat(e.target.value) || 0)}
+                          className="w-24 px-2 py-1 text-right border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm font-medium"
+                        />
+                      </div>
+                    </td>
                     <td className="py-3 px-2 text-right font-semibold text-emerald-700">{formatLKR(item.total)}</td>
                     <td className="py-3 px-2 text-center">
                       <button
