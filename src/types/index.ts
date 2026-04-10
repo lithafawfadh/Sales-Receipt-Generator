@@ -16,6 +16,7 @@ export interface Invoice {
   customer: Customer;
   items: SaleItem[];
   subtotal: number;
+  totalQuantity: number;
   discount: number;
   shippingFee: number;
   total: number;

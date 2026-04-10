@@ -248,6 +248,7 @@ export const SalesReceipt: React.FC = () => {
     setLoadingMessage(editingInvoiceId ? 'Updating invoice...' : 'Generating invoice...');
 
     const subtotal = saleItems.reduce((sum, item) => sum + item.total, 0);
+    const totalQuantity = saleItems.reduce((sum, item) => sum + item.quantity, 0);
     const discount = typeof discountAmount === 'string' ? 0 : discountAmount;
     const shippingFee = typeof shippingFeeAmount === 'string' ? 0 : shippingFeeAmount;
     const pendingAmt = typeof pendingAmount === 'string' ? 0 : pendingAmount;
@@ -266,6 +267,7 @@ export const SalesReceipt: React.FC = () => {
               customer,
               items: saleItems,
               subtotal,
+              totalQuantity,
               discount,
               shippingFee,
               total: totalAmount,
@@ -284,6 +286,7 @@ export const SalesReceipt: React.FC = () => {
             customer,
             items: saleItems,
             subtotal,
+            totalQuantity,
             discount,
             shippingFee,
             total: totalAmount,
@@ -427,6 +430,7 @@ export const SalesReceipt: React.FC = () => {
   };
 
   const subtotal = saleItems.reduce((sum, item) => sum + item.total, 0);
+  const totalQuantity = saleItems.reduce((sum, item) => sum + item.quantity, 0);
   const discount = typeof discountAmount === 'string' ? 0 : discountAmount;
   const shippingFee = typeof shippingFeeAmount === 'string' ? 0 : shippingFeeAmount;
   const pendingAmt = typeof pendingAmount === 'string' ? 0 : pendingAmount;
@@ -907,6 +911,12 @@ export const SalesReceipt: React.FC = () => {
           {/* Total Section */}
           <div className="border-t-2 border-gray-200 pt-4">
             <div className="space-y-3 mb-4">
+              {/* Total Quantity */}
+              <div className="flex justify-between items-center text-sm text-gray-500 mb-1">
+                <span>Total Quantity:</span>
+                <span className="font-medium">{totalQuantity} {totalQuantity === 1 ? 'item' : 'items'}</span>
+              </div>
+
               {/* Subtotal */}
               <div className="flex justify-between items-center text-base">
                 <span className="text-gray-700">Subtotal:</span>

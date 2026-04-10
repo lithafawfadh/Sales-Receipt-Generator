@@ -256,6 +256,11 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
         <div className="flex justify-end mb-6">
           <div className="w-full sm:w-3/4 md:w-1/2">
             <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="flex justify-between items-center text-sm mb-1.5 text-gray-700">
+                <span>Total Quantity:</span>
+                <span className="whitespace-nowrap font-medium">{invoice.totalQuantity}</span>
+              </div>
+
               <div className="flex justify-between items-center text-sm mb-1.5 text-gray-900">
                 <span>Subtotal:</span>
                 <span className="whitespace-nowrap">{formatLKR(invoice.subtotal)}</span>
