@@ -1,5 +1,6 @@
 import { Invoice } from '../types';
 import { supabase, getCurrentUserId } from './supabaseClient';
+import { roundToTwo } from './currency';
 
 export const getInvoices = async (): Promise<Invoice[]> => {
   try {
@@ -13,7 +14,20 @@ export const getInvoices = async (): Promise<Invoice[]> => {
       throw new Error('Failed to fetch invoices');
     }
 
-    return data || [];
+    return (data || []).map(item => ({
+      id: item.id,
+      invoiceNumber: item.invoice_number,
+      customer: item.customer,
+      items: item.items,
+      subtotal: roundToTwo(parseFloat(item.subtotal || '0')),
+      discount: roundToTwo(parseFloat(item.discount || '0')),
+      shippingFee: roundToTwo(parseFloat(item.shipping_fee || '0')),
+      total: roundToTwo(parseFloat(item.total || '0')),
+      pendingAmount: roundToTwo(parseFloat(item.pending_amount || '0')),
+      advancePayment: roundToTwo(parseFloat(item.advance_payment || '0')),
+      date: item.date,
+      user_id: item.user_id,
+    }));
   } catch (error) {
     console.error('Error in getInvoices:', error);
     throw error;
@@ -31,12 +45,12 @@ export const saveInvoice = async (invoice: Invoice): Promise<void> => {
         invoice_number: invoice.invoiceNumber,
         customer: invoice.customer,
         items: invoice.items,
-        subtotal: invoice.subtotal,
-        discount: invoice.discount,
-        shipping_fee: invoice.shippingFee,
-        total: invoice.total,
-        pending_amount: invoice.pendingAmount,
-        advance_payment: invoice.advancePayment,
+        subtotal: roundToTwo(invoice.subtotal),
+        discount: roundToTwo(invoice.discount),
+        shipping_fee: roundToTwo(invoice.shippingFee),
+        total: roundToTwo(invoice.total),
+        pending_amount: roundToTwo(invoice.pendingAmount),
+        advance_payment: roundToTwo(invoice.advancePayment),
         date: invoice.date,
       }]);
 
@@ -109,12 +123,12 @@ export const getInvoiceByNumber = async (invoiceNumber: string): Promise<Invoice
       invoiceNumber: data.invoice_number,
       customer: data.customer,
       items: data.items,
-      subtotal: parseFloat(data.subtotal),
-      discount: parseFloat(data.discount),
-      shippingFee: parseFloat(data.shipping_fee),
-      total: parseFloat(data.total),
-      pendingAmount: parseFloat(data.pending_amount || '0'),
-      advancePayment: parseFloat(data.advance_payment || '0'),
+      subtotal: roundToTwo(parseFloat(data.subtotal || '0')),
+      discount: roundToTwo(parseFloat(data.discount || '0')),
+      shippingFee: roundToTwo(parseFloat(data.shipping_fee || '0')),
+      total: roundToTwo(parseFloat(data.total || '0')),
+      pendingAmount: roundToTwo(parseFloat(data.pending_amount || '0')),
+      advancePayment: roundToTwo(parseFloat(data.advance_payment || '0')),
       date: data.date,
       user_id: data.user_id,
     };
@@ -132,12 +146,12 @@ export const updateInvoice = async (updatedInvoice: Invoice): Promise<void> => {
     const updatePayload: any = {
       customer: updatedInvoice.customer,
       items: updatedInvoice.items,
-      subtotal: updatedInvoice.subtotal,
-      discount: updatedInvoice.discount,
-      shipping_fee: updatedInvoice.shippingFee,
-      total: updatedInvoice.total,
-      pending_amount: updatedInvoice.pendingAmount,
-      advance_payment: updatedInvoice.advancePayment,
+      subtotal: roundToTwo(updatedInvoice.subtotal),
+      discount: roundToTwo(updatedInvoice.discount),
+      shipping_fee: roundToTwo(updatedInvoice.shippingFee),
+      total: roundToTwo(updatedInvoice.total),
+      pending_amount: roundToTwo(updatedInvoice.pendingAmount),
+      advance_payment: roundToTwo(updatedInvoice.advancePayment),
       date: updatedInvoice.date,
       updated_at: new Date().toISOString(),
     };

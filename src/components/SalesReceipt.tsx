@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Customer, SaleItem } from '../types';
-import { formatLKR } from '../utils/currency';
+import { formatLKR, roundToTwo } from '../utils/currency';
 import { getNextInvoiceNumber, saveInvoice, getInvoiceByNumber, updateInvoice, migrateLocalStorageToSupabase } from '../utils/storage';
 import { ReceiptPreview } from './ReceiptPreview';
 import { InvoiceHistory } from './InvoiceHistory';
@@ -52,7 +52,7 @@ export const SalesReceipt: React.FC = () => {
       productName: newItem.name,
       quantity: quantity,
       unitPrice: price,
-      total: quantity * price,
+      total: roundToTwo(quantity * price),
     };
 
     setSaleItems([...saleItems, newSaleItem]);
@@ -124,7 +124,7 @@ export const SalesReceipt: React.FC = () => {
           productName: product.name,
           quantity: product.quantity,
           unitPrice: product.price,
-          total: product.quantity * product.price,
+          total: roundToTwo(product.quantity * product.price),
         });
       }
 
@@ -182,7 +182,7 @@ export const SalesReceipt: React.FC = () => {
     setSaleItems(items =>
       items.map(item =>
         item.productId === productId
-          ? { ...item, quantity, total: quantity * item.unitPrice }
+          ? { ...item, quantity, total: roundToTwo(quantity * item.unitPrice) }
           : item
       )
     );
@@ -194,7 +194,7 @@ export const SalesReceipt: React.FC = () => {
     setSaleItems(items =>
       items.map(item =>
         item.productId === productId
-          ? { ...item, unitPrice, total: item.quantity * unitPrice }
+          ? { ...item, unitPrice, total: roundToTwo(item.quantity * unitPrice) }
           : item
       )
     );
@@ -247,13 +247,13 @@ export const SalesReceipt: React.FC = () => {
     setIsLoading(true);
     setLoadingMessage(editingInvoiceId ? 'Updating invoice...' : 'Generating invoice...');
 
-    const subtotal = saleItems.reduce((sum, item) => sum + item.total, 0);
+    const subtotal = roundToTwo(saleItems.reduce((sum, item) => sum + item.total, 0));
     const totalQuantity = saleItems.reduce((sum, item) => sum + item.quantity, 0);
     const discount = typeof discountAmount === 'string' ? 0 : discountAmount;
     const shippingFee = typeof shippingFeeAmount === 'string' ? 0 : shippingFeeAmount;
     const pendingAmt = typeof pendingAmount === 'string' ? 0 : pendingAmount;
     const advanceAmt = typeof advancePaymentAmount === 'string' ? 0 : advancePaymentAmount;
-    const totalAmount = subtotal - discount + shippingFee + pendingAmt;
+    const totalAmount = roundToTwo(subtotal - discount + shippingFee + pendingAmt);
     
     const processInvoice = async () => {
       try {
@@ -429,14 +429,14 @@ export const SalesReceipt: React.FC = () => {
     setErrors({});
   };
 
-  const subtotal = saleItems.reduce((sum, item) => sum + item.total, 0);
+  const subtotal = roundToTwo(saleItems.reduce((sum, item) => sum + item.total, 0));
   const totalQuantity = saleItems.reduce((sum, item) => sum + item.quantity, 0);
   const discount = typeof discountAmount === 'string' ? 0 : discountAmount;
   const shippingFee = typeof shippingFeeAmount === 'string' ? 0 : shippingFeeAmount;
   const pendingAmt = typeof pendingAmount === 'string' ? 0 : pendingAmount;
   const advanceAmt = typeof advancePaymentAmount === 'string' ? 0 : advancePaymentAmount;
-  const finalTotal = subtotal - discount + shippingFee + pendingAmt;
-  const balanceDue = finalTotal - advanceAmt;
+  const finalTotal = roundToTwo(subtotal - discount + shippingFee + pendingAmt);
+  const balanceDue = roundToTwo(finalTotal - advanceAmt);
 
   if (showReceipt && currentInvoice) {
     return (
