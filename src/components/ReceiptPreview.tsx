@@ -233,6 +233,7 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
           <table className="w-full border-collapse table-fixed text-xs">
             <thead>
               <tr className="bg-gray-50">
+                <th className="border border-gray-200 px-1 py-2 text-center font-semibold w-8">#</th>
                 <th className="border border-gray-200 px-2 py-2 text-left font-semibold w-2/5">Description</th>
                 <th className="border border-gray-200 px-2 py-2 text-center font-semibold w-1/12">Qty</th>
                 <th className="border border-gray-200 px-2 py-2 text-right font-semibold w-1/4">Unit Price</th>
@@ -242,6 +243,7 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
             <tbody>
               {invoice.items.map((item, index) => (
                 <tr key={index} className="border-b">
+                  <td className="border border-gray-200 px-1 py-2 text-center font-medium text-gray-600">{index + 1}</td>
                   <td className="border border-gray-200 px-2 py-2 break-words overflow-hidden font-medium">{item.productName}</td>
                   <td className="border border-gray-200 px-2 py-2 text-center font-medium">{item.quantity}</td>
                   <td className="border border-gray-200 px-2 py-2 text-right font-medium whitespace-nowrap">{formatNumber(item.unitPrice)}</td>

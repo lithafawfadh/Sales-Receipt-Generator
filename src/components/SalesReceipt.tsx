@@ -792,10 +792,13 @@ export const SalesReceipt: React.FC = () => {
           
           {/* Mobile Card View */}
           <div className="block sm:hidden space-y-3 mb-4 custom-scrollbar max-h-[400px] overflow-y-auto">
-            {saleItems.map((item) => (
+            {saleItems.map((item, index) => (
               <div key={item.productId} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-medium text-gray-900 text-sm flex-1 pr-2">{item.productName}</h3>
+                  <h3 className="font-medium text-gray-900 text-sm flex-1 pr-2">
+                    <span className="text-gray-500 mr-1">{index + 1}.</span>
+                    {item.productName}
+                  </h3>
                   <button
                     onClick={() => removeSaleItem(item.productId)}
                     className="text-red-600 hover:text-red-800 flex-shrink-0"
@@ -852,6 +855,7 @@ export const SalesReceipt: React.FC = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b-2 border-gray-200">
+                  <th className="text-center py-3 px-2 font-semibold text-gray-700 w-10">#</th>
                   <th className="text-left py-3 px-2 font-semibold text-gray-700">Product</th>
                   <th className="text-center py-3 px-2 font-semibold text-gray-700">Qty</th>
                   <th className="text-right py-3 px-2 font-semibold text-gray-700">Price</th>
@@ -860,8 +864,9 @@ export const SalesReceipt: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {saleItems.map((item) => (
+                {saleItems.map((item, index) => (
                   <tr key={item.productId} className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="py-3 px-2 text-center text-gray-500 font-medium">{index + 1}</td>
                     <td className="py-3 px-2">{item.productName}</td>
                     <td className="py-3 px-2 text-center">
                       <div className="flex items-center justify-center space-x-1">
