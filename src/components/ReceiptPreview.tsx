@@ -228,11 +228,14 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
             </div>
             
             {/* Bank Details - Compact */}
-            <div className="bg-gray-50 p-2 rounded text-xs text-gray-900 border border-gray-200">
-              <p className="font-bold mb-1">JM KULSHAN <span className="font-normal">(Kalmunai)</span></p>
-              <p className="font-semibold mb-0.5">BOC: 82344969</p>
-              <p className="font-semibold mb-0.5">COM: 8012128811</p>
-              <p className="font-semibold">PEOPLE'S: 338200280013200</p>
+            <div className="md:ml-auto mt-3 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-left text-xs text-blue-950 shadow-sm md:w-fit">
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-blue-700">Bank Details</p>
+              <div className="space-y-0.5 leading-tight">
+                <p className="font-bold text-blue-950">JM KULSHAN <span className="font-normal text-blue-800">(Kalmunai)</span></p>
+                <p><span className="font-semibold text-yellow-700">BOC BANK:</span> <span className="font-medium text-yellow-800">82344969</span></p>
+                <p><span className="font-semibold text-sky-600">COM BANK:</span> <span className="font-medium text-sky-700">8012128811</span></p>
+                <p><span className="font-semibold text-red-700">PEOPLE'S BANK:</span> <span className="font-medium text-red-800">338200280013200</span></p>
+              </div>
             </div>
           </div>
         </div>
