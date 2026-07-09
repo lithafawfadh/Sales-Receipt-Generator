@@ -232,9 +232,9 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
               <p className="mb-1 text-xl font-bold text-black">Bank Details</p>
               <div className="space-y-0.5 leading-tight">
                 <p className="font-bold text-gray-900">JM KULSHAN <span className="font-normal text-gray-700">(Kalmunai)</span></p>
-                <p><span className="font-semibold text-yellow-700">BOC BANK:</span> <span className="font-medium text-yellow-800">82344969</span></p>
-                <p><span className="font-semibold text-sky-600">COM BANK:</span> <span className="font-medium text-sky-700">8012128811</span></p>
-                <p><span className="font-semibold text-red-700">PEOPLE'S BANK:</span> <span className="font-medium text-red-800">338200280013200</span></p>
+                <p className="font-serif text-sky-700"><span className="font-semibold">BOC BANK:</span> <span className="font-medium text-sky-800">82344969</span></p>
+                <p className="font-serif text-sky-700"><span className="font-semibold">COM BANK:</span> <span className="font-medium text-sky-800">8012128811</span></p>
+                <p className="font-serif text-sky-700"><span className="font-semibold tracking-wide">PEOPLE'S BANK:</span> <span className="font-medium tracking-wide text-sky-800">338200280013200</span></p>
               </div>
             </div>
           </div>
