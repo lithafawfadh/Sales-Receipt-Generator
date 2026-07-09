@@ -220,10 +220,19 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
           </div>
           
           <div className="text-left md:text-right">
-            <div className="mb-2">
+            {/* Invoice Header */}
+            <div className="mb-3">
               <h2 className="text-xl font-bold text-gray-900 mb-1">INVOICE</h2>
               <p className="text-base"><strong>#{invoice.invoiceNumber}</strong></p>
               <p className="text-gray-800 text-sm">Date: {formatDate(invoice.date)}</p>
+            </div>
+            
+            {/* Bank Details - Compact */}
+            <div className="bg-gray-50 p-2 rounded text-xs text-gray-900 border border-gray-200">
+              <p className="font-bold mb-1">JM KULSHAN <span className="font-normal">(Kalmunai)</span></p>
+              <p className="font-semibold mb-0.5">BOC: 82344969</p>
+              <p className="font-semibold mb-0.5">COM: 8012128811</p>
+              <p className="font-semibold">PEOPLE'S: 338200280013200</p>
             </div>
           </div>
         </div>
@@ -314,14 +323,6 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
         <div className="text-center text-gray-800 text-xs border-t border-gray-900 pt-2">
           <p className="mb-1 font-medium">Thank you for your business!</p>
           <p className="font-medium">This is a computer-generated invoice and does not require a signature.</p>
-          
-          {/* Bank & Branch Details */}
-          <div className="mt-2 text-gray-900 text-xs space-y-0.5">
-            <p className="font-bold">JM KULSHAN <span className="font-normal">(Branch Kalmunai)</span></p>
-            <p className="font-bold">BOC BANK – <span className="font-bold">82344969</span></p>
-            <p className="font-bold">COM BANK – <span className="font-bold">8012128811</span></p>
-            <p className="font-bold">PEOPLE'S BANK – <span className="font-bold">338200280013200</span></p>
-          </div>
         </div>
       </div>
     </div>
