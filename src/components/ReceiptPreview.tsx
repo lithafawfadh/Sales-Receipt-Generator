@@ -229,7 +229,7 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
             
             {/* Bank Details - Compact */}
             <div className="md:ml-auto mt-3 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-left text-xs text-blue-950 shadow-sm md:w-fit">
-              <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-blue-700">Bank Details</p>
+              <p className="mb-1 text-xl font-bold text-black">Bank Details</p>
               <div className="space-y-0.5 leading-tight">
                 <p className="font-bold text-blue-950">JM KULSHAN <span className="font-normal text-blue-800">(Kalmunai)</span></p>
                 <p><span className="font-semibold text-yellow-700">BOC BANK:</span> <span className="font-medium text-yellow-800">82344969</span></p>
@@ -325,7 +325,6 @@ export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack 
         {/* Footer */}
         <div className="text-center text-gray-800 text-xs border-t border-gray-900 pt-2">
           <p className="mb-1 font-medium">Thank you for your business!</p>
-          <p className="font-medium">This is a computer-generated invoice and does not require a signature.</p>
         </div>
       </div>
     </div>
