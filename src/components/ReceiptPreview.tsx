@@ -7,7 +7,7 @@ import jsPDF from 'jspdf';
 
 interface ReceiptPreviewProps {
   invoice: Invoice;
-  onBack: () => void;// Callback function to handle the back button click
+  onBack: () => void;// Callback function to handle the back
 }
 
 export const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({ invoice, onBack }) => {
