@@ -9,10 +9,23 @@ import { Receipt, User, Plus, Minus, Trash2, ShoppingCart, List, X, FileText, Se
 interface BulkProduct {
   tempId: string;
   name: string;
-  quantity: number;
-  price: number;
+  quantity: number | '';
+  price: number | '';
   error?: string;
 }
+
+const parseBulkProductLine = (line: string): { name: string; quantity: number | '' } => {
+  const quantityMatch = line.match(/^(.+?)\s+(\d+)$/);
+
+  if (!quantityMatch) {
+    return { name: line, quantity: '' };
+  }
+
+  return {
+    name: quantityMatch[1].trim(),
+    quantity: parseInt(quantityMatch[2], 10),
+  };
+};
 
 export const SalesReceipt: React.FC = () => {
   const [customer, setCustomer] = useState<Customer>({
@@ -80,12 +93,16 @@ export const SalesReceipt: React.FC = () => {
       .map(line => line.trim())
       .filter(line => line.length > 0);
 
-    const parsed = productNames.map(name => ({
-      tempId: crypto.randomUUID(),
-      name,
-      quantity: '' as number | '',
-      price: '' as number | '',
-    }));
+    const parsed = productNames.map(line => {
+      const { name, quantity } = parseBulkProductLine(line);
+
+      return {
+        tempId: crypto.randomUUID(),
+        name,
+        quantity,
+        price: '' as number | '',
+      };
+    });
 
     setParsedProducts(parsed);
     setBulkInputText('');
@@ -605,13 +622,13 @@ export const SalesReceipt: React.FC = () => {
               {parsedProducts.length === 0 ? (
                 <div className="space-y-3">
                   <label className="block text-sm font-medium text-blue-800">
-                    Paste product list (one per line):
+                    Paste product list (one per line). Add a quantity at the end when needed:
                   </label>
                   <textarea
                     value={bulkInputText}
                     onChange={(e) => setBulkInputText(e.target.value)}
                     className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Fresh and white&#10;Ujooba cream&#10;Fogg master"
+                    placeholder="Fresh and white 2&#10;Ujooba cream 1&#10;Fogg master"
                     rows={6}
                   />
                   <button
